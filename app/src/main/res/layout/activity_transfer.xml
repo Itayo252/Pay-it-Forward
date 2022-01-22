@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:local="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvTransfer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:text="Transfer money"
+        android:textSize="50dp" />
+
+    <EditText
+        android:id="@+id/etTransferPhoneNumber"
+        android:layout_width="250sp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:hint="phone number"
+        android:inputType="phone"/>
+
+
+    <Spinner
+        android:id="@+id/spinnerTransferFriends"
+        android:layout_width="250sp"
+        android:layout_height="wrap_content"
+        android:entries="@array/planets_array" /> <!--TODO change later-->
+    <EditText
+        android:id="@+id/etTransferAmount"
+        android:layout_width="250sp"
+        android:layout_height="wrap_content"
+        android:ellipsize="start"
+        android:gravity="center"
+        android:hint="amount to transfer"
+        android:inputType="number" />
+
+    <Button
+        android:id="@+id/btnDoTransfer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Trasnfer please"
+        android:textAllCaps="false"
+        android:textSize="10dp" />
+
+    <ListView
+        android:id="@+id/lvPendingTransfers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>

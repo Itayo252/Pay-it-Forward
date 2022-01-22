@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvSignup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="60dp"
+        android:text="Sign up"
+        android:textSize="50dp" />
+
+<!--
+    <EditText
+        android:id="@+id/etSignUpFirstName"
+        android:layout_width="250sp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:hint="First name" />
+
+    <EditText
+        android:id="@+id/etSignUpLastName"
+        android:layout_width="250sp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:hint="Last name" />
+-->
+    <EditText
+        android:id="@+id/etSignUpUsername"
+        android:layout_width="250sp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:hint="username" />
+
+    <EditText
+        android:id="@+id/etSignUpPhoneNumber"
+        android:layout_width="250sp"
+        android:layout_height="wrap_content"
+        android:ellipsize="start"
+        android:gravity="center"
+        android:hint="phone number"
+        android:inputType="phone" />
+
+    <EditText
+        android:id="@+id/etSignUpPassword"
+        android:layout_width="250sp"
+        android:layout_height="wrap_content"
+        android:ellipsize="start"
+        android:gravity="center"
+        android:hint="password"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/etSignupPasswordVer"
+        android:layout_width="250sp"
+        android:layout_height="wrap_content"
+        android:ellipsize="start"
+        android:gravity="center"
+        android:hint="repeat password"
+        android:inputType="textPassword"/>
+
+<!--
+    <RadioButton
+        android:id="@+id/rbSignupMale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Male"/>
+
+    <RadioButton
+        android:id="@+id/rbSignupFemale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Female" />
+-->
+
+    <Button
+        android:id="@+id/btnSignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:text="sign me up" />
+
+</LinearLayout>

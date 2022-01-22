@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvWelcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="60dp"
+        android:text="Welcome!"
+        android:textSize="50dp" />
+
+    <EditText
+        android:id="@+id/etSigninPhoneNumber"
+        android:layout_width="250sp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:inputType="phone"
+        android:hint="phone number" />
+
+    <EditText
+        android:id="@+id/etSigninPassword"
+        android:layout_width="250sp"
+        android:layout_height="wrap_content"
+        android:ellipsize="start"
+        android:gravity="center"
+        android:hint="password"
+        android:inputType="textPassword"/>
+
+    <Button
+        android:id="@+id/btnGotoSignup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Signup"
+
+        android:textAllCaps="false"
+         />
+    <!--android:textSize="10dp"
+    "What the **** are you talking about?\nI want to sign up"-->
+    <CheckBox
+        android:id="@+id/cbRememberMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="remember me" />
+
+    <Button
+        android:id="@+id/btnSignin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:text="let me in" />
+
+</LinearLayout>
