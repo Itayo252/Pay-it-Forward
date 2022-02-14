@@ -43,9 +43,7 @@
     </LinearLayout>
 
     <ListView
+        android:id="@+id/lvTransferHistory"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/lvTransferHistory"/>
-
-
+        android:layout_height="wrap_content" />
 </LinearLayout>

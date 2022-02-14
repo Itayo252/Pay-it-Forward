@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.pay_it_forward.R;
+import com.example.pay_it_forward.Utils.ServerUtils;
 import com.example.pay_it_forward.Utils.User;
 import com.example.pay_it_forward.Utils.Utils;
 
@@ -64,7 +65,7 @@ public class SigninActivity extends AppCompatActivity {
             Utils.RaiseMessage.raiseWrongPassword(this);
         } else if (Utils.SigninFail.SUCCESS == returnCode) {
             if (isRememberMeChecked()) saveCreds();
-            closeSignin(new User(Utils.getNameByPhone(phoneNumber), phoneNumber, password));
+            closeSignin(new User(ServerUtils.getNameByPhone(phoneNumber), phoneNumber));
         }
     }
 

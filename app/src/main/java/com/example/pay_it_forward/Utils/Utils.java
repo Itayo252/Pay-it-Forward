@@ -5,29 +5,90 @@ import android.preference.PreferenceManager;
 import android.telephony.PhoneNumberUtils;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 public class Utils {
-
-
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final String PHONE_NUMBER = "phone number";
     public static final String USER = "user";
-    private static final String USER_FROM_PHONE_NUMBER = "user from phone";
+    public static final String USER_FROM_PHONE_NUMBER = "user from phone";
+    public static final String FROM = "from";
+    public static final String ID = "id";
+    public static final String AMOUNT = "amount";
+    public static final String OTHER_PHONE_NUMBER = "other phone number";
+    public static final String TO = "to";
 
-    public static User getUserFromPhone(String phoneNumber) {
-        return new User(getUserJSONFromServerFromPhoneNumber(phoneNumber));
+    public static List<Friend> getFriendsList(User user) {
+        List<Friend> list = new ArrayList<>();
+        JSONArray jsonArray = ServerUtils.getFriendsListOfUser(user);
+        for (int i = 0; i < Objects.requireNonNull(jsonArray).length(); i++) {
+            try {
+                list.add(new Friend(((JSONObject) jsonArray.get(i)).getString(Utils.USERNAME), ((JSONObject) jsonArray.get(i)).getString(Utils.PHONE_NUMBER)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return list;
+    }
+//    public static <T extends User> List<T> getFriendsList(User user) {
+//        List<T> list = new ArrayList<>();
+//        JSONArray jsonArray = ServerUtils.getFriendsListOfUser(user);
+//        for (int i = 0; i < Objects.requireNonNull(jsonArray).length(); i++) {
+//            try {
+//                list.add((T) new User(((JSONObject) jsonArray.get(i)).getString(Utils.USERNAME), ((JSONObject) jsonArray.get(i)).getString(Utils.PHONE_NUMBER)));
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        return list;
+//    }
+
+    public static boolean isValidNumber(String number) {
+        return number.length() > 0 && (Integer.parseInt(number) > 0);
     }
 
-    private static JSONObject getUserJSONFromServerFromPhoneNumber(String phoneNumber) {
-        try {
-            return ServerUtils.request(Utils.USER_FROM_PHONE_NUMBER, new JSONObject().put(Utils.PHONE_NUMBER, phoneNumber));
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
+    public static List<Friend.PendingFriend> getPendingFriendsList(User user) {
+        List<Friend.PendingFriend> list = new ArrayList<>();
+        JSONArray jsonArray = ServerUtils.getPendingFriendsListOfUser(user);
+        for (int i = 0; i < Objects.requireNonNull(jsonArray).length(); i++) {
+            try {
+                list.add(new Friend.PendingFriend(((JSONObject) jsonArray.get(i)).getString(Utils.USERNAME), ((JSONObject) jsonArray.get(i)).getString(Utils.PHONE_NUMBER), ((JSONObject) jsonArray.get(i)).getString(Utils.ID)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
+        return list;
+    }
+
+
+    public enum Codes {
+        SIGNIN_CODE,
+        SIGNUP_CODE
+    }
+
+
+    public enum SigninFail {
+        INVALID_PHONE_NUMBER,
+        NO_SUCH_PHONE,
+        WRONG_PASSWORD,
+        SUCCESS
+    }
+
+
+    public enum SignupFail {
+        INVALID_PHONE_NUMBER,
+        USER_EXISTS,
+        NOT_COOL_USERNAME,
+        PASSWORD_NOT_STRONG_ENOUGH,
+        PASSWORD_DOES_NOT_MATCH,
+        SUCCESS
     }
 
     public static Object safeGet(JSONObject json, String key) {
@@ -39,50 +100,8 @@ public class Utils {
         }
     }
 
-
-    public enum Codes {
-        SIGNIN_CODE,
-        SIGNUP_CODE
-
-    }
-
-    public enum SigninFail {
-        INVALID_PHONE_NUMBER,
-        NO_SUCH_PHONE,
-        WRONG_PASSWORD,
-        SUCCESS
-
-    }
-
-    public enum SignupFail {
-        INVALID_PHONE_NUMBER,
-        USER_EXISTS,
-        NOT_COOL_USERNAME,
-        PASSWORD_NOT_STRONG_ENOUGH,
-        PASSWORD_DOES_NOT_MATCH,
-        SUCCESS
-
-    }
     public static boolean isStrongPassword(String password) {
         return true; //TODO implement
-    }
-
-    public static boolean userWithPhoneNumberNotExists(String phoneNumber) {
-        try {
-            return !ServerUtils.request("user with phone number exists", new JSONObject().put(Utils.PHONE_NUMBER, phoneNumber)).getBoolean("return value"); //TODO implement
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return false; //TODO revisit
-        }
-    }
-
-    public static boolean correctPassword(String phoneNumber, String password) {
-        try {
-            return ServerUtils.request("verify password for phone", new JSONObject().put(Utils.PHONE_NUMBER, phoneNumber).put(Utils.PASSWORD, password)).getBoolean("return value"); //TODO implement
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return true; //TODO revisit
-        }
     }
 
     public static boolean notValidPhoneNumber(String phoneNumber) {
@@ -118,23 +137,22 @@ public class Utils {
         public static void raiseNotCoolUserName(Context context) {
             Toast.makeText(context, "Not cool! try again :)", Toast.LENGTH_SHORT).show();
         }
-    }
 
-    public static String getNameByPhone(String phoneNumber) {
-        try {
-            return ServerUtils.request("username for phone number", new JSONObject().put(Utils.PHONE_NUMBER, phoneNumber)).getString("return value"); //TODO implement
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null; //TODO revisit
+        public static void raiseNotValidAmount(Context context) {
+            Toast.makeText(context, "Not a valid amount of money!", Toast.LENGTH_SHORT).show();
+        }
+
+        public static void raiseNoUserWasChosen(Context context) {
+            Toast.makeText(context, "No user was chosen!", Toast.LENGTH_SHORT).show();
         }
     }
 
     public static SigninFail tryToSignin(String phoneNumber, String password) {
         if (notValidPhoneNumber(phoneNumber)) {
             return SigninFail.INVALID_PHONE_NUMBER;
-        } else if (userWithPhoneNumberNotExists(phoneNumber)) {
+        } else if (ServerUtils.userWithPhoneNumberNotExists(phoneNumber)) {
             return SigninFail.NO_SUCH_PHONE;
-        } else if (!correctPassword(phoneNumber, password)) {
+        } else if (!ServerUtils.correctPassword(phoneNumber, password)) {
             return SigninFail.WRONG_PASSWORD;
         } else {
             return SigninFail.SUCCESS;

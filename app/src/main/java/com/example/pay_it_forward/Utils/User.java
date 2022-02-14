@@ -6,17 +6,17 @@ import org.json.JSONObject;
 import java.io.Serializable;
 
 public class User implements Serializable {
-    private String username, phoneNumber, password;
+    private String username, phoneNumber;
 
-    //TODO implement
-    public User(String username, String phoneNumber, String password) {
+    //TODO implement and heavily rethink the fucking idea of plaintext passwords you moron
+    public User(String username, String phoneNumber) {
         this.username = username;
         this.phoneNumber = phoneNumber;
-        this.password = password;
+
     }
 
     public User(JSONObject userJSON) {
-        this((String) Utils.safeGet(userJSON, Utils.USERNAME), (String) Utils.safeGet(userJSON, Utils.PHONE_NUMBER), (String) Utils.safeGet(userJSON, Utils.PASSWORD));
+        this((String) Utils.safeGet(userJSON, Utils.USERNAME), (String) Utils.safeGet(userJSON, Utils.PHONE_NUMBER));
     }
 
     public String getUsername() {
@@ -35,20 +35,45 @@ public class User implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public JSONObject toJSON() {
         try {
-            return new JSONObject().put(Utils.USERNAME, getUsername()).put(Utils.PHONE_NUMBER, getPhoneNumber()).put(Utils.PASSWORD, getPassword());
+            return new JSONObject().put(Utils.USERNAME, getUsername()).put(Utils.PHONE_NUMBER, getPhoneNumber());
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public static class UserWithPassword extends User {
+        private String password;
+
+        public UserWithPassword(String username, String phoneNumber, String password) {
+            super(username, phoneNumber);
+            this.password = password;
+        }
+
+        public UserWithPassword(JSONObject userJSON) {
+            super(userJSON);
+            this.password = (String) Utils.safeGet(userJSON, Utils.PASSWORD);
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+        @Override
+        public JSONObject toJSON() {
+            try {
+                return super.toJSON().put(Utils.PASSWORD, getPassword());
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
         }
     }
 }

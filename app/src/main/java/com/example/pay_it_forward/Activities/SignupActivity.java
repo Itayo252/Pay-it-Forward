@@ -41,7 +41,7 @@ public class SignupActivity extends AppCompatActivity {
         } else if (fail == Utils.SignupFail.NOT_COOL_USERNAME) {
             Utils.RaiseMessage.raiseNotCoolUserName(this);
         } else if (fail == Utils.SignupFail.SUCCESS) {
-            User user = new User(getUsername(), getPhoneNumber(), getPassword()); //TODO change according to final implementation
+            User.UserWithPassword user = new User.UserWithPassword(getUsername(), getPhoneNumber(), getPassword()); //TODO change according to final implementation
             ServerUtils.registerNewUser(user);
             closeSignup();
         }
@@ -51,7 +51,7 @@ public class SignupActivity extends AppCompatActivity {
         if (Utils.notValidPhoneNumber(getPhoneNumber())) {
             return Utils.SignupFail.INVALID_PHONE_NUMBER;
         }
-        if (!Utils.userWithPhoneNumberNotExists(getPhoneNumber())) {
+        if (!ServerUtils.userWithPhoneNumberNotExists(getPhoneNumber())) {
             return Utils.SignupFail.USER_EXISTS;
         }
         if (!getPassword().equals(getVerifyPassword())) {
@@ -76,8 +76,8 @@ public class SignupActivity extends AppCompatActivity {
         finish();
     }
 
-    private User getUser() {
-        return new User(getUsername(), getPhoneNumber(), getPassword());
+    private User.UserWithPassword getUser() {
+        return new User.UserWithPassword(getUsername(), getPhoneNumber(), getPassword());
     }
 
     private String getPhoneNumber() {
