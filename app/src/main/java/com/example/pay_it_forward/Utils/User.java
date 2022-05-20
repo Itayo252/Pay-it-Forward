@@ -5,6 +5,9 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
+/**
+ * A class to hold all information of a user
+ */
 public class User implements Serializable {
     private String username, phoneNumber;
 
@@ -15,10 +18,15 @@ public class User implements Serializable {
 
     }
 
+    /**
+     *
+     * @param userJSON a json that holds the information of the user to be created
+     */
     public User(JSONObject userJSON) {
         this((String) Utils.safeGet(userJSON, Utils.USERNAME), (String) Utils.safeGet(userJSON, Utils.PHONE_NUMBER));
     }
 
+    //getters and setters
     public String getUsername() {
         return username;
     }
@@ -45,6 +53,9 @@ public class User implements Serializable {
         }
     }
 
+    /**
+     * not all users instances need to hold the password, but for those who needs it, this class exists
+     */
     public static class UserWithPassword extends User {
         private String password;
 

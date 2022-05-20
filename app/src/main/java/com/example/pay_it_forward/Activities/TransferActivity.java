@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TransferActivity extends AppCompatActivity {
-
+    //logged in user
     User user;
     ArrayAdapter<Transfer> pendingTransfersArrayAdapter;
     private String spinnerValue;
@@ -41,7 +41,7 @@ public class TransferActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transfer);
 
-        user = (User) getIntent().getSerializableExtra(Utils.USER);
+        user = (User) getIntent().getSerializableExtra(Utils.USER); //get user
 
         ArrayAdapter<Friend> friendArrayAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, 0, Stream.concat(Stream.of(new Friend("", "")), Utils.getFriendsList(user).stream()).collect(Collectors.toList()));
         this.<Spinner>findViewById(R.id.spinnerTransferFriends).setAdapter(friendArrayAdapter);
@@ -60,10 +60,9 @@ public class TransferActivity extends AppCompatActivity {
         initListView();
     }
 
-    private String parseSpinnerValue(String spinnerValue) {
-        return spinnerValue;
-    }
-
+    /**
+     * check if the user exists and the amount is valid
+     */
     private void transfer() {
         String otherPhoneNumber;
         if (this.<EditText>findViewById(R.id.etTransferPhoneNumber).getText().toString().length() > 0) {
@@ -80,6 +79,7 @@ public class TransferActivity extends AppCompatActivity {
             Utils.RaiseMessage.raiseNotValidAmount(this);
 
         } else {
+            //if the transfer is valid, execute it
             TransferUtils.transfer(user.getPhoneNumber(), otherPhoneNumber, Integer.parseInt(this.<EditText>findViewById(R.id.etTransferAmount).getText().toString()));
             cleanFields();
         }
@@ -107,26 +107,31 @@ public class TransferActivity extends AppCompatActivity {
         ((ListView) findViewById(R.id.lvPendingTransfers)).setAdapter(pendingTransfersArrayAdapter);
     }
 
-    private void updateTransferState(String transferId, boolean isAccepted) {
-        ServerUtils.updateRequest(transferId, "update transfer", isAccepted);
-        pendingTransfersArrayAdapter.remove(getTransferByTransferId(transferId));
+    private void updateTransferState(int transferId, boolean isAccepted) {
+        ServerUtils.updateRequest(transferId, "update transfer", isAccepted); //notify server
+        pendingTransfersArrayAdapter.remove(getTransferByTransferId(transferId)); //remove entry from list
     }
 
-    private Transfer getTransferByTransferId(String transferId) {
+    /**
+     * itreate through the list to find the transfer
+     * @param transferId the id whose transfer we want to find
+     * @return the appropriate transfer
+     */
+    private Transfer getTransferByTransferId(int transferId) {
         for (int i = 0; i < pendingTransfersArrayAdapter.getCount(); i++) {
-            if (pendingTransfersArrayAdapter.getItem(i).getId().equals(transferId)) {
+            if (pendingTransfersArrayAdapter.getItem(i).getId() == transferId) {
                 return pendingTransfersArrayAdapter.getItem(i);
             }
         }
         return null;
     }
 
-    private void denyTransfer(String transferId) {
+    private void denyTransfer(int transferId) {
         updateTransferState(transferId, false);
     }
 
 
-    private void acceptTransfer(String transferId) {
+    private void acceptTransfer(int transferId) {
         updateTransferState(transferId, true);
     }
 

@@ -23,7 +23,7 @@ import com.example.pay_it_forward.Utils.User;
 import com.example.pay_it_forward.Utils.Utils;
 
 public class MainActivity extends AppCompatActivity {
-    User user;
+    User user; //the user who is logged in currently
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +33,21 @@ public class MainActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         signin();
         setupButtons();
+    }
+
+    /**
+     * when entering screen (after signing in mainly) update the listwiew if logged in
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (user != null) {
+            updateListView();
+        }
+    }
+
+    private void updateListView() {
+        //request the list from transferutils and parse
         this.<ListView>findViewById(R.id.lvTransferHistory).setAdapter(new ArrayAdapter<Transfer>(this, 0, 0, TransferUtils.getRecentTransfers(user)) {
             @NonNull
             @Override
@@ -45,7 +60,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
+    /**
+     * change the name in title
+     */
     private void updateName() {
         this.<TextView>findViewById(R.id.tvHello).setText(String.format(getString(R.string.helloMainScreen), user.getUsername()));
     }
@@ -57,14 +74,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void signin() {
-        if (savedCredentials()) {
-            if (Utils.tryToSignin(Utils.getSavedPhoneNumber(this), Utils.getSavedPassword(this)) == Utils.SigninFail.SUCCESS) {
+        if (savedCredentials()) { // if ever checked the remeber me box upon signing in
+            if (Utils.tryToSignin(Utils.getSavedPhoneNumber(this), Utils.getSavedPassword(this)) == Utils.SigninFail.SUCCESS) { // checking if the creds are of an existing user
                 updateUser(Utils.getSavedPhoneNumber(this));
                 updateName();
                 return;
             }
         }
-        openSigninScreen();
+        openSigninScreen(); // if signing in failed
     }
 
     private void updateUser(String phoneNumber) {
@@ -83,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        //if signing in was successful
         if (requestCode == Utils.Codes.SIGNIN_CODE.ordinal() && resultCode == RESULT_OK) {
             assert data != null;
             user = (User) data.getSerializableExtra(Utils.USER);

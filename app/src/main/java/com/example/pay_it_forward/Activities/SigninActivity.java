@@ -24,11 +24,15 @@ public class SigninActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
 
+        //setup buttons
         this.<Button>findViewById(R.id.btnGotoSignup).setOnClickListener(v -> signup());
         this.<Button>findViewById(R.id.btnSignin).setOnClickListener(v -> signin(getPhoneNumber(), getPassword()));
     }
 
 
+    /**
+     * setup and open signup screen
+     */
     private void signup() {
         Intent intent = new Intent(this, SignupActivity.class);
         intent.putExtra(Utils.PHONE_NUMBER, getPhoneNumber());
@@ -41,7 +45,7 @@ public class SigninActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == Utils.Codes.SIGNUP_CODE.ordinal() && resultCode == RESULT_OK) {
-            closeSignin((User) data.getSerializableExtra(Utils.USER));
+            closeSignin((User) data.getSerializableExtra(Utils.USER)); // if the signup was successful close the login and login with the created user credentials
         }
     }
 
@@ -56,7 +60,8 @@ public class SigninActivity extends AppCompatActivity {
     }
 
     private void signin(String phoneNumber, String password) {
-        Utils.SigninFail returnCode = Utils.tryToSignin(phoneNumber, password);
+        Utils.SigninFail returnCode = Utils.tryToSignin(phoneNumber, password); // try to signin with the server
+        //handle return code with appropriate massage or signin
         if (Utils.SigninFail.INVALID_PHONE_NUMBER == returnCode) {
             Utils.RaiseMessage.raiseNotValidPhoneNumber(this);
         } else if (Utils.SigninFail.NO_SUCH_PHONE == returnCode) {
@@ -77,6 +82,10 @@ public class SigninActivity extends AppCompatActivity {
         PreferenceManager.getDefaultSharedPreferences(this).edit().putString(Utils.PHONE_NUMBER, getPhoneNumber()).putString(Utils.PASSWORD, getPassword()).apply();
     }
 
+    /**
+     * after signin was successful due to signup or user exists close the screen and sign in with the user
+     * @param user the user to be logged in
+     */
     private void closeSignin(User user) {
         getIntent().putExtra(Utils.USER, user);
         setResult(Activity.RESULT_OK, getIntent());
@@ -84,6 +93,9 @@ public class SigninActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * DO NOT LET THE USER GO BACK TO MAIN SCREEN IF NOT SIGNED IN
+     */
     @Override
     public void onBackPressed() { //muy importante
         moveTaskToBack(true);

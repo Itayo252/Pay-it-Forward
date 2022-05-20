@@ -22,7 +22,7 @@ import com.example.pay_it_forward.Utils.User;
 import com.example.pay_it_forward.Utils.Utils;
 
 public class FriendsActivity extends AppCompatActivity {
-
+    //signed in user
     private User user;
 
     @Override
@@ -30,11 +30,12 @@ public class FriendsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
 
-        user = (User) getIntent().getSerializableExtra(Utils.USER);
+        user = (User) getIntent().getSerializableExtra(Utils.USER); //get the user from previous screen
 
+        //setup buttons
         this.<Button>findViewById(R.id.btnPendingFriends).setOnClickListener(v -> startActivity(new Intent(FriendsActivity.this, PendingFriendsActivity.class).putExtra(Utils.USER, user)));
         this.<Button>findViewById(R.id.btnAddFriend).setOnClickListener(v -> addFriend(this.<EditText>findViewById(R.id.etAddFriend).getText().toString()));
-        ArrayAdapter<Friend> friendArrayAdapter = new ArrayAdapter<Friend>(this, 0, 0, Utils.getFriendsList(user)) {
+        this.<ListView>findViewById(R.id.lvFriendsList).setAdapter(new ArrayAdapter<Friend>(FriendsActivity.this, 0, 0, Utils.getFriendsList(user)) { //setup friends list
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -43,12 +44,15 @@ public class FriendsActivity extends AppCompatActivity {
                 ((TextView) view.findViewById(R.id.tvFriendPhoneNumber)).setText(getItem(position).getPhoneNumber());
                 return view;
             }
-        };
-        this.<ListView>findViewById(R.id.lvFriendsList).setAdapter(friendArrayAdapter);
+        });
     }
 
+    /**
+     * get the phone number from the screen, check it and send friendship request
+     * @param friendPhoneNumber the phone number to send the request to
+     */
     private void addFriend(String friendPhoneNumber) {
-        this.<EditText>findViewById(R.id.etAddFriend).setText("");
+        this.<EditText>findViewById(R.id.etAddFriend).setText(""); //reset the input
         if (friendPhoneNumber.length() == 0) {
             return;
         }

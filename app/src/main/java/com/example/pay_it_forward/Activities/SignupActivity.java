@@ -21,15 +21,20 @@ public class SignupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+
+        //get the creds from login screen
         this.<EditText>findViewById(R.id.etSignUpPhoneNumber).setText(getIntent().getStringExtra(Utils.PHONE_NUMBER));
         this.<EditText>findViewById(R.id.etSignUpPassword).setText(getIntent().getStringExtra(Utils.PASSWORD));
         this.<EditText>findViewById(R.id.etSignupPasswordVer).setText(getIntent().getStringExtra(Utils.PASSWORD));
+
+        //setup button
         this.<Button>findViewById(R.id.btnSignUp).setOnClickListener(v -> signup());
 
     }
 
     private void signup() {
-        Utils.SignupFail fail = checkFields();
+        Utils.SignupFail fail = checkFields(); //check what's wrong with info
+        //raise message according to fail
         if (fail == Utils.SignupFail.INVALID_PHONE_NUMBER) {
             Utils.RaiseMessage.raiseNotValidPhoneNumber(this);
         } else if (fail == Utils.SignupFail.USER_EXISTS) {
@@ -40,9 +45,11 @@ public class SignupActivity extends AppCompatActivity {
             Utils.RaiseMessage.raisePasswordNotStrongEnough(this);
         } else if (fail == Utils.SignupFail.NOT_COOL_USERNAME) {
             Utils.RaiseMessage.raiseNotCoolUserName(this);
-        } else if (fail == Utils.SignupFail.SUCCESS) {
+        }
+        //if everything is just fantastic
+        else if (fail == Utils.SignupFail.SUCCESS) {
             User.UserWithPassword user = new User.UserWithPassword(getUsername(), getPhoneNumber(), getPassword()); //TODO change according to final implementation
-            ServerUtils.registerNewUser(user);
+            ServerUtils.registerNewUser(user); // notify the server
             closeSignup();
         }
     }
@@ -66,6 +73,10 @@ public class SignupActivity extends AppCompatActivity {
         return Utils.SignupFail.SUCCESS;
     }
 
+    /**
+     * who doesn't like harmless trolls?
+     * @return if you are lucky :)
+     */
     private boolean notCoolUsername() {
         return new Random().nextInt(2) > 0;
     }
