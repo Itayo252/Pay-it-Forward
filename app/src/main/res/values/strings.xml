@@ -22,4 +22,5 @@
     <string name="menu_slideshow">Slideshow</string>
     <string name="title_activity_drawer">DrawerActivity</string>
     <string name="helloMainScreen">Hello %s</string>
+    <string name="title_activity_network">NetworkActivity</string>
 </resources>

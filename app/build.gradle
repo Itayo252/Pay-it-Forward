@@ -28,6 +28,7 @@ android {
     buildFeatures {
         viewBinding true
     }
+    namespace 'com.example.pay_it_forward'
 }
 
 dependencies {

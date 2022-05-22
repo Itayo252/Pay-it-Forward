@@ -73,6 +73,21 @@ public class Utils {
         return list;
     }
 
+    public static List<Transfer> getDebtsList(String phoneNumber) { //TODO save on phone instead on remote server
+        List<Transfer> list = new ArrayList<>();
+        JSONArray jsonArray = ServerUtils.getListOfDebts(phoneNumber); // request list from server
+        for (int i = 0; i < Objects.requireNonNull(jsonArray).length(); i++) {
+            try {
+                list.add(new Transfer((String) Utils.safeGet(jsonArray.getJSONObject(i), Utils.FROM),
+                        "",0,
+                        (Integer) Utils.safeGet(jsonArray.getJSONObject(i), Utils.AMOUNT)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return list;
+    }
+
 
     /**
      * An enum for code convenience in new screen opening
