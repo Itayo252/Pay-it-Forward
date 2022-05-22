@@ -142,6 +142,15 @@ public class ServerUtils {
         }
     }
 
+    public static JSONArray getListOfDebts(String phoneNumber) {
+        try {
+            return request("get debts list", new JSONObject().put(Utils.PHONE_NUMBER, phoneNumber)).getJSONArray("return value");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private static class SocketTask extends AsyncTask<JSONObject, Void, JSONObject> { //TODO switch to proper sockets
         private Socket socket;
         // RSA parameters

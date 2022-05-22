@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupButtons() {
         this.<Button>findViewById(R.id.btnTransfer).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, TransferActivity.class).putExtra(Utils.USER, user)));
-        //this.<Button>findViewById(R.id.btnNetwork).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, NetworkActivity.class))); //TODO implement
+        this.<Button>findViewById(R.id.btnNetwork).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, NetworkActivity.class).putExtra(Utils.USER, user))); //TODO implement
         this.<Button>findViewById(R.id.btnFriends).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, FriendsActivity.class).putExtra(Utils.USER, user)));
     }
 
