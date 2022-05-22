@@ -14,13 +14,14 @@ import java.io.OutputStreamWriter;
 import java.math.BigInteger;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 public class ServerUtils {
     //host and port of server
-    private static final String HOST = "pay.cyber.flipsbits.com"; //TODO change to real host and port
+    private static final String HOST = "10.0.2.2"; //TODO change to real host and port
     private static final int PORT = 9696;
 
     public static void registerNewUser(User.UserWithPassword user) {
@@ -136,6 +137,15 @@ public class ServerUtils {
     public static JSONArray getRecentTransfers(User user) {
         try {
             return request("get recent transfers", new JSONObject().put(Utils.PHONE_NUMBER, user.getPhoneNumber())).getJSONArray("return value");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static JSONArray getListOfDebts(String phoneNumber) {
+        try {
+            return request("get debts list", new JSONObject().put(Utils.PHONE_NUMBER, phoneNumber)).getJSONArray("return value");
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
