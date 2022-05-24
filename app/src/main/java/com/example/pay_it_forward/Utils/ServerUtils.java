@@ -14,14 +14,13 @@ import java.io.OutputStreamWriter;
 import java.math.BigInteger;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 public class ServerUtils {
     //host and port of server
-    private static final String HOST = "10.0.2.2"; //TODO change to real host and port
+    private static final String HOST = "pay.cyber.flipsbits.com"; //TODO change to real host and port
     private static final int PORT = 9696;
 
     public static void registerNewUser(User.UserWithPassword user) {
